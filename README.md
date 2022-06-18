@@ -4,7 +4,15 @@ Service account keys are a security risk if compromised.
 Avoid service account keys and instead use the [Workload Identity Federation](https://cloud.google.com/iam/docs/configuring-workload-identity-federation).
 You can learn more about the best way to authenticate service accounts on Google Cloud here.
 
-![Image: Auth Flow](./img/wif-flow.png?v1)
+```mermaid
+graph TD;
+  user(GitHub, GitLab etc...) --> |1| token[GCP Security Token Services];
+  token <--> |2| pool[Workload Identity Pool]
+  user --> |3| sa[Service Account];
+  sa --> gcp[Google Cloud Platform Service]
+  user -.-> pool
+  pool -.-> sa
+```
 
 Unlike JSON service account keys, Workload Identity Federation generates short-lived OAuth 2.0 or JWT credentials. By default, these credentials automatically expire one hour after they are created, potentially reducing the time a malicious actor would be able to exploit a compromised credential.
 
