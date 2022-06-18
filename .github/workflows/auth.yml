@@ -34,5 +34,6 @@ jobs:
         name: 📥 Google Cloud CLI
         run: |
           gcloud config list
+          gcloud components install alpha --quiet
           gcloud alpha storage ls
           gsutil cat gs://workload-identity-federation-read-test/test.txt
