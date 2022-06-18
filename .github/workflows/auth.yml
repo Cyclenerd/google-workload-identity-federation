@@ -34,3 +34,4 @@ jobs:
         name: 📥 Google Cloud CLI
         run: |
           gcloud config list
+          gsutil cat gs://workload-identity-federation-read-test/test.txt
