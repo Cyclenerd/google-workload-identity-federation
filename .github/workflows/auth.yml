@@ -24,7 +24,7 @@ jobs:
         with:
           workload_identity_provider: 'projects/788468196583/locations/global/workloadIdentityPools/github/providers/action'
           service_account: 'github-action@workload-identity-353718.iam.gserviceaccount.com'
-          token_format: 'access_token'
+          #token_format: 'access_token' # uncomment to troubleshoot "permission denied" errors
           create_credentials_file: true
           export_environment_variables: true
       # Install gcloud, `setup-gcloud` automatically picks up authentication from `auth`.
@@ -36,6 +36,4 @@ jobs:
         name: 📥 Google Cloud CLI
         run: |
           gcloud config list
-          gcloud components install alpha --quiet
-          gcloud alpha storage ls
           gsutil cat gs://workload-identity-federation-read-test/test.txt
