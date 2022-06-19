@@ -263,3 +263,13 @@ More Help:
 ```
 
 » [GitLab OIDC token documentation](https://docs.gitlab.com/ee/ci/cloud_services/index.html#how-it-works)
+
+
+## License
+
+All files in this repository are under the [Apache License, Version 2.0](LICENSE) unless noted otherwise.
+
+Please note:
+
+* No warranty
+* No official Google product
