@@ -81,9 +81,9 @@ gcloud iam service-accounts add-iam-policy-binding "$MY_SERVICE_ACCOUNT_EMAIL" \
 --member="principalSet://iam.googleapis.com/${WORKLOAD_IDENTITY_POOL_ID}/attribute.repository/${REPO}"
 ```
 
-| 🚨🚨🚨 Caution | 
-|---------|
-| Setting the correct `principalSet` with `attribute.repository` is very important. This is the only way to avoid that all GitHub repositories can authenticate! | 
+> **Warning**
+> Setting the correct `principalSet` with `attribute.repository` is very important.
+> This is the only way to avoid that all GitHub repositories can authenticate!
 
 Extract the Workload Identity Provider resource name:
 ```bash
@@ -95,6 +95,8 @@ gcloud iam workload-identity-pools providers describe "action" \
 ```
 
 Copy this name for your GitHub Action and add it to `workload_identity_provider`.
+
+:octocat: GitHub Action:
 
 An example of a working GitHub application can be found [here](https://github.com/Cyclenerd/google-workload-identity-federation/blob/master/.github/workflows/auth.yml) (`.github/workflows/auth.yml`).
 
