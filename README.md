@@ -4,6 +4,11 @@ Service account keys are a security risk if compromised.
 Avoid service account keys and instead use the [Workload Identity Federation](https://cloud.google.com/iam/docs/configuring-workload-identity-federation).
 You can learn more about the best way to authenticate service accounts on Google Cloud here.
 
+* :octocat: [GitHub](#set-up-identity-federation-for-github-action)
+* :heart: [GitLab](#set-up-identity-federation-for-gitlab-ci)
+
+---
+
 ```mermaid
 graph TD;
   user(GitHub, GitLab etc...) --> |1| token[GCP Security Token Services];
@@ -13,6 +18,8 @@ graph TD;
   user -.-> pool
   pool -.-> sa
 ```
+
+---
 
 Unlike JSON service account keys, Workload Identity Federation generates short-lived OAuth 2.0 or JWT credentials. By default, these credentials automatically expire one hour after they are created, potentially reducing the time a malicious actor would be able to exploit a compromised credential.
 
@@ -96,7 +103,7 @@ gcloud iam workload-identity-pools providers describe "action" \
 
 Copy this name for your GitHub Action and add it to `workload_identity_provider`.
 
-:octocat: GitHub Action:
+GitHub Action:
 
 An example of a working GitHub Action configuration can be found [here](https://github.com/Cyclenerd/google-workload-identity-federation/blob/master/.github/workflows/auth.yml) (`.github/workflows/auth.yml`).
 
