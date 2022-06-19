@@ -1,0 +1,20 @@
+default:
+  image: google/cloud-sdk:slim
+
+stages:
+  - auth
+
+auth:
+  stage: auth
+  script:
+    # Configure Workload Identity Federation via a credentials file.
+    - echo ${CI_JOB_JWT_V2} > .ci_job_jwt_file
+    - gcloud iam workload-identity-pools create-cred-config "projects/788468196583/locations/global/workloadIdentityPools/gitlab/providers/cicd"
+      --service-account="gitlab-ci@workload-identity-353718.iam.gserviceaccount.com"
+      --output-file=.gcp_temp_cred.json
+      --credential-source-file=.ci_job_jwt_file
+    - gcloud auth login --cred-file=`pwd`/.gcp_temp_cred.json
+     # Now you can run gcloud commands authenticated as the impersonated service account.
+    - gcloud config list
+    - gsutil cat gs://workload-identity-federation-read-test/test.txt
+  when: manual
