@@ -5,7 +5,7 @@ Avoid service account keys and instead use the [Workload Identity Federation](ht
 You can learn more about the best way to authenticate service accounts on Google Cloud here.
 
 * :octocat: [GitHub](#set-up-identity-federation-for-github-action)
-* :heart: [GitLab](#set-up-identity-federation-for-gitlab-ci)
+* 🦊 [GitLab](#set-up-identity-federation-for-gitlab-ci)
 
 ---
 
