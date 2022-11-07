@@ -1,5 +1,9 @@
 # Workload Identity Federation
 
+[![Bagde: Google Cloud](https://img.shields.io/badge/Google%20Cloud-%234285F4.svg?logo=google-cloud&logoColor=white)](#readme)
+[![Badge: GitHub](https://img.shields.io/badge/GitHub-181717.svg?logo=github&logoColor=white)](#set-up-identity-federation-for-github-action)
+[![Badge: GitLab](https://img.shields.io/badge/GitLab-FC6D26.svg?logo=gitlab&logoColor=white)](#set-up-identity-federation-for-gitlab-ci)
+
 Service account keys are a security risk if compromised.
 Avoid service account keys and instead use the [Workload Identity Federation](https://cloud.google.com/iam/docs/configuring-workload-identity-federation).
 You can learn more about the best way to authenticate service accounts on Google Cloud here.
