@@ -154,7 +154,8 @@ More Help:
 
 
 ## Set up Identity Federation for GitLab CI
-You can do all of the following steps with Terraform using the file `gitlab-setup.tf`
+
+> You can also do all the following steps with [Terraform](https://registry.terraform.io/providers/hashicorp/google/latest/docs), using the [`gitlab-setup.tf`](./gitlab-setup.tf) file as an example.
 
 Run in Google Cloud Shell:
 ```bash
