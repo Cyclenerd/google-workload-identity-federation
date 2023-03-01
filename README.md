@@ -6,7 +6,7 @@
 
 Service account keys are a security risk if compromised.
 Avoid service account keys and instead use the [Workload Identity Federation](https://cloud.google.com/iam/docs/configuring-workload-identity-federation).
-You can learn more about the best way to authenticate service accounts on Google Cloud here.
+You can learn more about the best way to authenticate service accounts on Google Cloud in this repo.
 
 * :octocat: [GitHub](#set-up-identity-federation-for-github-action)
 * 🦊 [GitLab](#set-up-identity-federation-for-gitlab-ci)
@@ -29,34 +29,34 @@ Unlike JSON service account keys, Workload Identity Federation generates short-l
 
 Because Workload Identity Federation uses short-lived credentials, there are no secrets to rotate or manage beyond the initial configuration.
 
+
 ## Set up Identity Federation for GitHub Action
 
-Run in Google Cloud Shell:
+Run in the following [Google Cloud CLI](https://cloud.google.com/sdk/docs/install) commands...
+
+Set project:
 ```bash
-gcloud config set project YOUR-GOOGLE-CLOUD-PROJECT
+gcloud config set project YOUR-GOOGLE-CLOUD-PROJECT-ID
 ```
 
 Enable the IAM Credentials API:
 ```bash
-gcloud services enable iamcredentials.googleapis.com \
---project="$GOOGLE_CLOUD_PROJECT"
+gcloud services enable iamcredentials.googleapis.com
 ```
 
 Create a Workload Identity Pool:
 ```bash
-gcloud iam workload-identity-pools create "github" \
---project="$GOOGLE_CLOUD_PROJECT" \
+gcloud iam workload-identity-pools create "github-com" \
 --location="global" \
---display-name="GitHub Action"
+--display-name="github.com"
 ```
 
 Create a Workload Identity Provider in that pool:
 ```bash
-gcloud iam workload-identity-pools providers create-oidc "action" \
---project="$GOOGLE_CLOUD_PROJECT" \
+gcloud iam workload-identity-pools providers create-oidc "github-com-oidc" \
 --location="global" \
---workload-identity-pool="github" \
---display-name="GitHub Action OIDC" \
+--workload-identity-pool="github-com" \
+--display-name="github.com OIDC" \
 --attribute-mapping="google.subject=assertion.sub,attribute.sub=assertion.sub,attribute.actor=assertion.actor,attribute.repository=assertion.repository" \
 --issuer-uri="https://token.actions.githubusercontent.com"
 ```
@@ -72,8 +72,7 @@ Attribute mapping:
 
 Get the full ID of the Workload Identity Pool:
 ```bash
-gcloud iam workload-identity-pools describe "github" \
---project="$GOOGLE_CLOUD_PROJECT" \
+gcloud iam workload-identity-pools describe "github-com" \
 --location="global" \
 --format="value(name)"
 ```
@@ -85,18 +84,17 @@ export WORKLOAD_IDENTITY_POOL_ID="..." # value from above
 
 Save your GitHub repository as an environment variable
 ```bash
-export REPO="username/name" # e.g. "Cyclenerd/google-workload-identity-federation"
+export REPO="username/name" # i.e. "Cyclenerd/google-workload-identity-federation"
 ```
 
 Save the service account ID (email) as an environment variable:
 ```bash
-export MY_SERVICE_ACCOUNT_EMAIL="my-service-account@PROJECT_ID.iam.gserviceaccount.com."
+export MY_SERVICE_ACCOUNT_EMAIL="MY-SERVICE-ACCOUNT-NAME@MY-PROJECT_ID.iam.gserviceaccount.com."
 ```
 
 Allow authentications from the Workload Identity Provider originating from your repository to impersonate the Service Account:
 ```bash
 gcloud iam service-accounts add-iam-policy-binding "$MY_SERVICE_ACCOUNT_EMAIL" \
---project="$GOOGLE_CLOUD_PROJECT" \
 --role="roles/iam.workloadIdentityUser" \
 --member="principalSet://iam.googleapis.com/${WORKLOAD_IDENTITY_POOL_ID}/attribute.repository/${REPO}"
 ```
@@ -107,21 +105,19 @@ gcloud iam service-accounts add-iam-policy-binding "$MY_SERVICE_ACCOUNT_EMAIL" \
 
 Extract the Workload Identity Provider resource name:
 ```bash
-gcloud iam workload-identity-pools providers describe "action" \
---project="$GOOGLE_CLOUD_PROJECT" \
+gcloud iam workload-identity-pools providers describe "github-com-oidc" \
 --location="global" \
---workload-identity-pool="github" \
+--workload-identity-pool="github-com" \
 --format="value(name)"
 ```
 
-Copy this name for your GitHub Action and add it to `workload_identity_provider`.
+Copy this name for your GitHub Action configuration and add it to `workload_identity_provider`.
 
-GitHub Action:
+**GitHub Action:**
 
-An example of a working GitHub Action configuration can be found [here](https://github.com/Cyclenerd/google-workload-identity-federation/blob/master/.github/workflows/auth.yml) (`.github/workflows/auth.yml`).
+An example of a working GitHub Action configuration can be found [here](https://github.com/Cyclenerd/google-workload-identity-federation/blob/master/.github/workflows/auth.yml) ([`.github/workflows/auth.yml`](https://github.com/Cyclenerd/google-workload-identity-federation/blob/master/.github/workflows/auth.yml)).
 
-
-More Help:
+**More Help:**
 
 * [Google GitHub Action repo](https://github.com/google-github-actions/auth#setup)
 * [Troubleshooting](https://github.com/google-github-actions/auth/blob/main/docs/TROUBLESHOOTING.md)
@@ -159,39 +155,36 @@ More Help:
   "iat": 1632493567
 }
 ```
-» [GitHub OIDC token documentation](https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/about-security-hardening-with-openid-connect#understanding-the-oidc-token)
+Source: [GitHub OIDC token documentation](https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/about-security-hardening-with-openid-connect#understanding-the-oidc-token)
 
 
 ## Set up Identity Federation for GitLab CI
 
-> You can also do all the following steps with [Terraform](https://registry.terraform.io/providers/hashicorp/google/latest/docs), using the [`gitlab-setup.tf`](./gitlab-setup.tf) file as an example.
+Run in the following [Google Cloud CLI](https://cloud.google.com/sdk/docs/install) commands...
 
-Run in Google Cloud Shell:
+Set project:
 ```bash
 gcloud config set project YOUR-GOOGLE-CLOUD-PROJECT
 ```
 
 Enable the IAM Credentials API:
 ```bash
-gcloud services enable iamcredentials.googleapis.com \
---project="$GOOGLE_CLOUD_PROJECT"
+gcloud services enable iamcredentials.googleapis.com
 ```
 
 Create a Workload Identity Pool:
 ```bash
-gcloud iam workload-identity-pools create "gitlab" \
---project="$GOOGLE_CLOUD_PROJECT" \
+gcloud iam workload-identity-pools create "gitlab-com" \
 --location="global" \
---display-name="GitLab CI"
+--display-name="gitlab.com"
 ```
 
 Create a Workload Identity Provider in that pool:
 ```bash
-gcloud iam workload-identity-pools providers create-oidc "cicd" \
---project="$GOOGLE_CLOUD_PROJECT" \
+gcloud iam workload-identity-pools providers create-oidc "gitlab-com-oidc" \
 --location="global" \
---workload-identity-pool="gitlab" \
---display-name="GitLab CI OIDC" \
+--workload-identity-pool="gitlab-com" \
+--display-name="gitlab.com OIDC" \
 --attribute-mapping="google.subject=assertion.sub,attribute.sub=assertion.sub,attribute.actor=assertion.actor,attribute.repository=assertion.project_path" \
 --issuer-uri="https://gitlab.com" \
 --allowed-audiences="https://gitlab.com"
@@ -211,8 +204,7 @@ Attribute mapping:
 
 Get the full ID of the Workload Identity Pool:
 ```bash
-gcloud iam workload-identity-pools describe "gitlab" \
---project="$GOOGLE_CLOUD_PROJECT" \
+gcloud iam workload-identity-pools describe "gitlab-com" \
 --location="global" \
 --format="value(name)"
 ```
@@ -224,42 +216,40 @@ export WORKLOAD_IDENTITY_POOL_ID="..." # value from above
 
 Save your GitHub repository as an environment variable
 ```bash
-export REPO="username/name" # e.g. "Cyclenerd/google-workload-identity-federation"
+export REPO="username/name" # i.e. "Cyclenerd/google-workload-identity-federation-for-gitlab"
 ```
 
 Save the service account ID (email) as an environment variable:
 ```bash
-export MY_SERVICE_ACCOUNT_EMAIL="my-service-account@PROJECT_ID.iam.gserviceaccount.com."
+export MY_SERVICE_ACCOUNT_EMAIL="MY-SERVICE-ACCOUNT-NAME@MY-PROJECT_ID.iam.gserviceaccount.com."
 ```
 
 Allow authentications from the Workload Identity Provider originating from your repository to impersonate the Service Account:
 ```bash
 gcloud iam service-accounts add-iam-policy-binding "$MY_SERVICE_ACCOUNT_EMAIL" \
---project="$GOOGLE_CLOUD_PROJECT" \
 --role="roles/iam.workloadIdentityUser" \
 --member="principalSet://iam.googleapis.com/${WORKLOAD_IDENTITY_POOL_ID}/attribute.repository/${REPO}"
 ```
 
 > **Warning**
-> Setting the correct `principalSet` with `attribute.project_path` is very important.
+> Setting the correct `principalSet` with `attribute.repository` is very important.
 > This is the only way to avoid that all GitLab repositories can authenticate!
 
 Extract the Workload Identity Provider resource name:
 ```bash
-gcloud iam workload-identity-pools providers describe "cicd" \
---project="$GOOGLE_CLOUD_PROJECT" \
+gcloud iam workload-identity-pools providers describe "gitlab-com-oidc" \
 --location="global" \
---workload-identity-pool="gitlab" \
+--workload-identity-pool="gitlab-com" \
 --format="value(name)"
 ```
 
-Copy this name for your GitHub Action and add it to `workload_identity_provider`.
+Copy this name for your GitLab CI configuration (`gitlab-ci.yml`).
 
-GitLab CI:
+**GitLab CI:**
 
-An example of a working GitLab CI configuration can be found [here](.gitlab-ci.yml) (`.gitlab-ci.yml`) or on [GitLab](https://gitlab.com/Cyclenerd/google-workload-identity-federation-for-gitlab/-/blob/master/.gitlab-ci.yml).
+An example of a working GitLab CI configuration can be found [here](.gitlab-ci.yml) ([`.gitlab-ci.yml`](.gitlab-ci.yml)) or on [GitLab](https://gitlab.com/Cyclenerd/google-workload-identity-federation-for-gitlab/-/blob/master/.gitlab-ci.yml).
 
-More Help:
+**More Help:**
 
 * [GitLab Documentation](https://docs.gitlab.com/ee/ci/cloud_services/google_cloud/)
 * [GitLab OpenID Connect in GCP repo](https://gitlab.com/guided-explorations/gcp/configure-openid-connect-in-gcp)
@@ -292,8 +282,14 @@ More Help:
   "environment_protected": "true"
 }
 ```
+Source: [GitLab OIDC token documentation](https://docs.gitlab.com/ee/ci/cloud_services/index.html#how-it-works)
 
-» [GitLab OIDC token documentation](https://docs.gitlab.com/ee/ci/cloud_services/index.html#how-it-works)
+
+## Disable Service Account Keys
+
+You can disabled the key creation for service accounts via the organization policy constraint: `constraints/iam.disableServiceAccountKeyCreation`
+
+This organization policy constraint is not mandatory, but with it you can be sure that no one will create new service account keys and Workload Identity Federation will be used.
 
 
 ## License
