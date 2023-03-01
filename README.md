@@ -57,9 +57,18 @@ gcloud iam workload-identity-pools providers create-oidc "action" \
 --location="global" \
 --workload-identity-pool="github" \
 --display-name="GitHub Action OIDC" \
---attribute-mapping="google.subject=assertion.sub,attribute.actor=assertion.actor,attribute.repository=assertion.repository" \
+--attribute-mapping="google.subject=assertion.sub,attribute.sub=assertion.sub,attribute.actor=assertion.actor,attribute.repository=assertion.repository" \
 --issuer-uri="https://token.actions.githubusercontent.com"
 ```
+
+Attribute mapping:
+
+| Attribute              | Claim                  |
+|------------------------|------------------------|
+| `google.subject`       | `assertion.sub`        |
+| `attribute.sub`        | `assertion.sub`        |
+| `attribute.actor`      | `assertion.actor`      |
+| `attribute.repository` | `assertion.repository` |
 
 Get the full ID of the Workload Identity Pool:
 ```bash
@@ -183,13 +192,22 @@ gcloud iam workload-identity-pools providers create-oidc "cicd" \
 --location="global" \
 --workload-identity-pool="gitlab" \
 --display-name="GitLab CI OIDC" \
---attribute-mapping="google.subject=assertion.sub,attribute.actor=assertion.actor,attribute.project_path=assertion.project_path" \
+--attribute-mapping="google.subject=assertion.sub,attribute.sub=assertion.sub,attribute.actor=assertion.actor,attribute.repository=assertion.project_path" \
 --issuer-uri="https://gitlab.com" \
 --allowed-audiences="https://gitlab.com"
 ```
 
 > **Note**
 > Issuer URL `issuer-uri` and allowed audiences `allowed-audiences` must be `https://gitlab.com`.
+
+Attribute mapping:
+
+| Attribute              | Claim                                                 |
+|------------------------|-------------------------------------------------------|
+| `google.subject`       | `assertion.sub`                                       |
+| `attribute.sub`        | `assertion.sub`                                       |
+| `attribute.actor`      | `assertion.actor`                                     |
+| `attribute.repository` | `assertion.project_path` (not `assertion.repository`) |
 
 Get the full ID of the Workload Identity Pool:
 ```bash
@@ -219,7 +237,7 @@ Allow authentications from the Workload Identity Provider originating from your 
 gcloud iam service-accounts add-iam-policy-binding "$MY_SERVICE_ACCOUNT_EMAIL" \
 --project="$GOOGLE_CLOUD_PROJECT" \
 --role="roles/iam.workloadIdentityUser" \
---member="principalSet://iam.googleapis.com/${WORKLOAD_IDENTITY_POOL_ID}/attribute.project_path/${REPO}"
+--member="principalSet://iam.googleapis.com/${WORKLOAD_IDENTITY_POOL_ID}/attribute.repository/${REPO}"
 ```
 
 > **Warning**

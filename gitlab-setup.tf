@@ -27,10 +27,10 @@ resource "google_iam_workload_identity_pool_provider" "cicd" {
   display_name                       = "GitLab CI OIDC"
   project                            = local.PROJECT_ID
   attribute_mapping = {
-    "google.subject"         = "assertion.sub",
-    "attribute.repository"   = "assertion.repository"
-    "attribute.actor"        = "assertion.actor"
-    "attribute.project_path" = "assertion.project_path"
+    "google.subject"       = "assertion.sub",
+    "attribute.repository" = "assertion.repository"
+    "attribute.actor"      = "assertion.actor"
+    "attribute.repository" = "assertion.project_path"
   }
   oidc {
     issuer_uri        = "https://gitlab.com"
@@ -53,6 +53,6 @@ resource "google_service_account_iam_binding" "admin-account-iam" {
   service_account_id = "projects/${local.PROJECT_NUMBER}/serviceAccounts/${local.MY_SERVICE_ACCOUNT_EMAIL}"
   role               = "roles/iam.workloadIdentityUser"
   members = [
-    "principalSet://iam.googleapis.com/projects/${local.PROJECT_NUMBER}/locations/global/workloadIdentityPools/${google_iam_workload_identity_pool.gitlab.workload_identity_pool_id}/attribute.project_path/${local.REPO}"
+    "principalSet://iam.googleapis.com/projects/${local.PROJECT_NUMBER}/locations/global/workloadIdentityPools/${google_iam_workload_identity_pool.gitlab.workload_identity_pool_id}/attribute.repository/${local.REPO}"
   ]
 }
