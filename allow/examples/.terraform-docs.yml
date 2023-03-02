@@ -1,0 +1,33 @@
+formatter: "markdown"
+output:
+  file: "README.md"
+  mode: inject
+  template: |-
+    <!-- BEGIN_TF_DOCS -->
+    {{ .Content }}
+    <!-- END_TF_DOCS -->
+settings:
+  indent: 2
+content: |-
+  ## Examples
+
+  ### Variables
+
+  `variables.tf`:
+  ```hcl
+  {{ include "variables.tf" }}
+  ```
+
+  ### GitHub
+
+  `github.tf`:
+  ```hcl
+  {{ include "github.tf" }}
+  ```
+
+  ## GitLab
+
+  `gitlab.tf`:
+  ```hcl
+  {{ include "gitlab.tf" }}
+  ```

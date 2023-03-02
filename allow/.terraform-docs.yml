@@ -1,0 +1,22 @@
+formatter: "markdown"
+output:
+  file: "README.md"
+  mode: replace
+  template: |-
+    <!-- BEGIN_TF_DOCS -->
+    {{ .Content }}
+    <!-- END_TF_DOCS -->
+settings:
+  indent: 2
+content: |-
+  # Allow Login via Workload Identity Provider
+
+  With this Terraform module you can allow service account to login via Workload Identity Providers.
+
+  Examples for using the module can be found in the [examples](examples/) folder.
+
+  {{ .Providers }}
+
+  {{ .Inputs }}
+
+  {{ .Outputs }}
