@@ -305,6 +305,23 @@ An example of a working GitLab CI configuration can be found [here](.gitlab-ci.y
 Source: [GitLab OIDC token documentation](https://docs.gitlab.com/ee/ci/cloud_services/index.html#how-it-works)
 
 
+## Google Cloud Console
+
+In Google Cloud Console, you can check the settings at the following locations.
+
+### Workload Identity Pools
+
+![Screenshot: Google Cloud Console - Workload Identity Pools](./img/google-cloud-console-wif.png)
+
+### Workload Identity Provider Attribute Mapping
+
+![Screenshot: Google Cloud Console - Workload Identity Provider Mapping](./img/google-cloud-console-mapping.png)
+
+### Service Account Permissions
+
+![Screenshot: Google Cloud Console - Service Account Permissions](./img/google-cloud-console-account.png)
+
+
 ## Disable Service Account Keys
 
 You can disabled the key creation for service accounts via the organization policy constraint: `constraints/iam.disableServiceAccountKeyCreation`
