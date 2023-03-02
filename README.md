@@ -34,13 +34,15 @@ Because Workload Identity Federation uses short-lived credentials, there are no 
 
 Run in the following [Google Cloud CLI](https://cloud.google.com/sdk/docs/install) commands...
 
-Set project:
+Set project (replace `YOUR-GOOGLE-CLOUD-PROJECT-ID` with your project ID):
 ```bash
 gcloud config set project YOUR-GOOGLE-CLOUD-PROJECT-ID
 ```
 
-Enable the IAM Credentials API:
+Enable APIs:
 ```bash
+gcloud services enable iam.googleapis.com
+gcloud services enable sts.googleapis.com
 gcloud services enable iamcredentials.googleapis.com
 ```
 
@@ -79,24 +81,24 @@ gcloud iam workload-identity-pools describe "github-com" \
 
 Save this value as an environment variable:
 ```bash
-export WORKLOAD_IDENTITY_POOL_ID="..." # value from above
+export WORKLOAD_IDENTITY_POOL="..." # value from above
 ```
 
-Save your GitHub repository as an environment variable
+Save your GitHub repository as an environment variable:
 ```bash
-export REPO="username/name" # i.e. "Cyclenerd/google-workload-identity-federation"
+export REPOSITORY="username/name" # i.e. "Cyclenerd/google-workload-identity-federation"
 ```
 
 Save the service account ID (email) as an environment variable:
 ```bash
-export MY_SERVICE_ACCOUNT_EMAIL="MY-SERVICE-ACCOUNT-NAME@MY-PROJECT_ID.iam.gserviceaccount.com."
+export SERVICE_ACCOUNT_EMAIL="MY-SERVICE-ACCOUNT-NAME@MY-PROJECT_ID.iam.gserviceaccount.com."
 ```
 
 Allow authentications from the Workload Identity Provider originating from your repository to impersonate the Service Account:
 ```bash
-gcloud iam service-accounts add-iam-policy-binding "$MY_SERVICE_ACCOUNT_EMAIL" \
+gcloud iam service-accounts add-iam-policy-binding "$SERVICE_ACCOUNT_EMAIL" \
 --role="roles/iam.workloadIdentityUser" \
---member="principalSet://iam.googleapis.com/${WORKLOAD_IDENTITY_POOL_ID}/attribute.repository/${REPO}"
+--member="principalSet://iam.googleapis.com/${WORKLOAD_IDENTITY_POOL}/attribute.repository/${REPOSITORY}"
 ```
 
 > **Warning**
@@ -162,13 +164,15 @@ Source: [GitHub OIDC token documentation](https://docs.github.com/en/actions/dep
 
 Run in the following [Google Cloud CLI](https://cloud.google.com/sdk/docs/install) commands...
 
-Set project:
+Set project (replace `YOUR-GOOGLE-CLOUD-PROJECT-ID` with your project ID):
 ```bash
 gcloud config set project YOUR-GOOGLE-CLOUD-PROJECT
 ```
 
-Enable the IAM Credentials API:
+Enable APIs:
 ```bash
+gcloud services enable iam.googleapis.com
+gcloud services enable sts.googleapis.com
 gcloud services enable iamcredentials.googleapis.com
 ```
 
@@ -211,24 +215,24 @@ gcloud iam workload-identity-pools describe "gitlab-com" \
 
 Save this value as an environment variable:
 ```bash
-export WORKLOAD_IDENTITY_POOL_ID="..." # value from above
+export WORKLOAD_IDENTITY_POOL="..." # value from above
 ```
 
 Save your GitHub repository as an environment variable
 ```bash
-export REPO="username/name" # i.e. "Cyclenerd/google-workload-identity-federation-for-gitlab"
+export REPOSITORY="username/name" # i.e. "Cyclenerd/google-workload-identity-federation-for-gitlab"
 ```
 
 Save the service account ID (email) as an environment variable:
 ```bash
-export MY_SERVICE_ACCOUNT_EMAIL="MY-SERVICE-ACCOUNT-NAME@MY-PROJECT_ID.iam.gserviceaccount.com."
+export SERVICE_ACCOUNT_EMAIL="MY-SERVICE-ACCOUNT-NAME@MY-PROJECT_ID.iam.gserviceaccount.com."
 ```
 
 Allow authentications from the Workload Identity Provider originating from your repository to impersonate the Service Account:
 ```bash
-gcloud iam service-accounts add-iam-policy-binding "$MY_SERVICE_ACCOUNT_EMAIL" \
+gcloud iam service-accounts add-iam-policy-binding "$SERVICE_ACCOUNT_EMAIL" \
 --role="roles/iam.workloadIdentityUser" \
---member="principalSet://iam.googleapis.com/${WORKLOAD_IDENTITY_POOL_ID}/attribute.repository/${REPO}"
+--member="principalSet://iam.googleapis.com/${WORKLOAD_IDENTITY_POOL}/attribute.repository/${REPOSITORY}"
 ```
 
 > **Warning**
