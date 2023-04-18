@@ -22,8 +22,8 @@ jobs:
         name: 🔐 Authenticate to Google Cloud
         uses: google-github-actions/auth@v0
         with:
-          workload_identity_provider: 'projects/1057256049272/locations/global/workloadIdentityPools/github-com/providers/github-com-oidc'
-          service_account: 'github-action@nkn-it-wif-demo.iam.gserviceaccount.com'
+          workload_identity_provider: 'projects/753695557698/locations/global/workloadIdentityPools/github-com/providers/github-com-oidc'
+          service_account: 'github-actions@nkn-it-wif-demo-0.iam.gserviceaccount.com'
           #token_format: 'access_token' # uncomment to troubleshoot "permission denied" errors
           create_credentials_file: true
           export_environment_variables: true
@@ -36,4 +36,4 @@ jobs:
         name: 📥 Google Cloud CLI
         run: |
           gcloud config list
-          gcloud storage cat gs://gcs-nkn-it-wif-demo/test.txt
+          gcloud storage cat gs://gcs-nkn-it-wif-demo-0/test.txt
