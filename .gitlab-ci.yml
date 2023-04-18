@@ -2,8 +2,8 @@ default:
   image: cyclenerd/google-cloud-gcp-tools-container:latest
 
 variables:
-  WIF_PROVIDER: projects/1057256049272/locations/global/workloadIdentityPools/gitlab-com/providers/gitlab-com-oidc
-  SERVICE_ACCOUNT: gitlab-ci@nkn-it-wif-demo.iam.gserviceaccount.com
+  WIF_PROVIDER: projects/753695557698/locations/global/workloadIdentityPools/gitlab-com/providers/gitlab-com-oidc
+  SERVICE_ACCOUNT: gitlab-ci@nkn-it-wif-demo-0.iam.gserviceaccount.com
   GOOGLE_CREDENTIALS: gcp_temp_cred.json
 
 stages:
@@ -21,5 +21,5 @@ auth:
     - gcloud config set auth/credential_file_override "${GOOGLE_CREDENTIALS}"
      # Now you can run gcloud commands authenticated as the impersonated service account.
     - gcloud config list
-    - gcloud storage cat gs://gcs-nkn-it-wif-demo/test.txt
+    - gcloud storage cat gs://gcs-nkn-it-wif-demo-0/test.txt
   when: manual
