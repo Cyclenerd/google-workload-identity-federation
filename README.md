@@ -9,9 +9,12 @@ Service account keys are a security risk if compromised.
 Avoid service account keys and instead use the [Workload Identity Federation](https://cloud.google.com/iam/docs/configuring-workload-identity-federation).
 You can learn more about the best way to authenticate service accounts on Google Cloud in this repo.
 
-If you have understood the concept, you can also use the prepared [Terraform modules](https://github.com/Cyclenerd/google-workload-identity-federation/tree/master/allow/examples#readme).
-This makes the setup much faster and automated.
-Examples and explanation can be found [here](https://github.com/Cyclenerd/google-workload-identity-federation/tree/master/allow/examples#readme).
+> If you have understood the concept, you can also use my Terraform modules:
+> * [Google Cloud Workload Identity for GitHub](https://registry.terraform.io/modules/Cyclenerd/wif-github/google/latest)
+> * [Google Cloud Workload Identity for GitLab](https://registry.terraform.io/modules/Cyclenerd/wif-gitlab/google/latest)
+> * [Allow Login via WIF for Service Accounts](https://registry.terraform.io/modules/Cyclenerd/wif-service-account/google/latest)
+>
+> This makes the setup much faster and automated.
 
 Quick link to the tutorial for...
 * :octocat: [GitHub](#set-up-identity-federation-for-github-action)
