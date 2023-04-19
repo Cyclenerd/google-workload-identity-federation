@@ -39,7 +39,7 @@ Unlike JSON service account keys, Workload Identity Federation generates short-l
 Because Workload Identity Federation uses short-lived credentials, there are no secrets to rotate or manage beyond the initial configuration.
 
 
-## Set up Identity Federation for GitHub Action
+## Set up Identity Federation for GitHub Actions
 
 Run in the following [Google Cloud CLI](https://cloud.google.com/sdk/docs/install) commands...
 
@@ -127,15 +127,15 @@ gcloud iam workload-identity-pools providers describe "github-com-oidc" \
 --format="value(name)"
 ```
 
-Copy this name for your GitHub Action configuration and add it to `workload_identity_provider`.
+Copy this name for your GitHub Actions configuration and add it to `workload_identity_provider`.
 
-**GitHub Action:**
+**GitHub Actions:**
 
-An example of a working GitHub Action configuration can be found [here](https://github.com/Cyclenerd/google-workload-identity-federation/blob/master/.github/workflows/auth.yml) ([`.github/workflows/auth.yml`](https://github.com/Cyclenerd/google-workload-identity-federation/blob/master/.github/workflows/auth.yml)).
+An example of a working GitHub Actions configuration can be found [here](https://github.com/Cyclenerd/google-workload-identity-federation/blob/master/.github/workflows/auth.yml) ([`.github/workflows/auth.yml`](https://github.com/Cyclenerd/google-workload-identity-federation/blob/master/.github/workflows/auth.yml)).
 
 **More Help:**
 
-* [Google GitHub Action repo](https://github.com/google-github-actions/auth#setup)
+* [Google GitHub Actions repo](https://github.com/google-github-actions/auth#setup)
 * [Troubleshooting](https://github.com/google-github-actions/auth/blob/main/docs/TROUBLESHOOTING.md)
 * [Google Blog](https://cloud.google.com/blog/products/identity-security/enabling-keyless-authentication-from-github-actions)
 * [Google Documentation](https://cloud.google.com/iam/docs/configuring-workload-identity-federation#github-actions)
