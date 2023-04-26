@@ -203,7 +203,7 @@ gcloud iam workload-identity-pools providers create-oidc "gitlab-com-oidc" \
 --location="global" \
 --workload-identity-pool="gitlab-com" \
 --display-name="gitlab.com OIDC" \
---attribute-mapping="google.subject=assertion.sub,attribute.sub=assertion.sub,attribute.actor=assertion.actor,attribute.repository=assertion.project_path" \
+--attribute-mapping="google.subject=assertion.sub,attribute.sub=assertion.sub,attribute.actor=assertion.user_login,attribute.repository=assertion.project_path" \
 --issuer-uri="https://gitlab.com" \
 --allowed-audiences="https://gitlab.com"
 ```
@@ -217,7 +217,7 @@ Attribute mapping:
 |------------------------|-------------------------------------------------------|
 | `google.subject`       | `assertion.sub`                                       |
 | `attribute.sub`        | `assertion.sub`                                       |
-| `attribute.actor`      | `assertion.actor`                                     |
+| `attribute.actor`      | `assertion.user_login` (not `assertion.actor`)        |
 | `attribute.repository` | `assertion.project_path` (not `assertion.repository`) |
 
 Get the full ID of the Workload Identity Pool:
