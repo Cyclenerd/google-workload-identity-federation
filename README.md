@@ -6,7 +6,7 @@
 [![Badge: GitLab](https://img.shields.io/badge/GitLab-FC6D26.svg?logo=gitlab&logoColor=white)](#set-up-identity-federation-for-gitlab-ci)
 
 Service account keys are a security risk if compromised.
-Avoid service account keys and instead use the [Workload Identity Federation](https://cloud.google.com/iam/docs/configuring-workload-identity-federation).
+Avoid service account keys and instead use the [Workload Identity Federation](https://cloud.google.com/iam/docs/workload-identity-federation).
 You can learn more about the best way to authenticate service accounts on Google Cloud in this repo.
 
 > If you have understood the concept, you can also use my Terraform modules:
