@@ -55,7 +55,7 @@ Save this value as an environment variable:
 export WORKLOAD_IDENTITY_POOL="..." # value from above
 ```
 
-Save your GitHub repository as an environment variable
+Save your GitLab repository as an environment variable
 ```bash
 export REPOSITORY="username/name" # i.e. "Cyclenerd/google-workload-identity-federation-for-gitlab"
 ```
