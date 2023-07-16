@@ -1,0 +1,24 @@
+image: cyclenerd/google-cloud-gcp-tools-container:latest
+
+pipelines:
+  default:
+    - step:
+        name: "Workload Identity Federation"
+        # Enable OIDC
+        oidc: true
+        max-time: 5
+        script:
+          # Set variables
+          - export WIF_PROVIDER='projects/753695557698/locations/global/workloadIdentityPools/bitbucket-org/providers/bitbucket-org-oidc'
+          - export SERVICE_ACCOUNT='bitbucket-pipeline@nkn-it-wif-demo-0.iam.gserviceaccount.com'
+          - export GOOGLE_CREDENTIALS='gcp_temp_cred.json'
+          # Configure Workload Identity Federation via a credentials file.
+          - echo ${BITBUCKET_STEP_OIDC_TOKEN} > .ci_job_jwt_file
+          - gcloud iam workload-identity-pools create-cred-config "${WIF_PROVIDER}"
+            --service-account="${SERVICE_ACCOUNT}"
+            --output-file="${GOOGLE_CREDENTIALS}"
+            --credential-source-file=.ci_job_jwt_file
+          - gcloud config set auth/credential_file_override "${GOOGLE_CREDENTIALS}"
+          # Now you can run gcloud commands authenticated as the impersonated service account.
+          - gcloud config list
+          - gcloud storage cat gs://gcs-nkn-it-wif-demo-0/test.txt

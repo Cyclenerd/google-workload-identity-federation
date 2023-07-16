@@ -2,8 +2,9 @@
 
 [![Bagde: Google Cloud](https://img.shields.io/badge/Google%20Cloud-%234285F4.svg?logo=google-cloud&logoColor=white)](#readme)
 [![Badge: Terraform](https://img.shields.io/badge/Terraform-%235835CC.svg?logo=terraform&logoColor=white)](https://github.com/Cyclenerd/google-workload-identity-federation/tree/master/allow/examples#readme)
-[![Badge: GitHub](https://img.shields.io/badge/GitHub-181717.svg?logo=github&logoColor=white)](#set-up-identity-federation-for-github-action)
-[![Badge: GitLab](https://img.shields.io/badge/GitLab-FC6D26.svg?logo=gitlab&logoColor=white)](#set-up-identity-federation-for-gitlab-ci)
+[![Badge: GitHub](https://img.shields.io/badge/GitHub-181717.svg?logo=github&logoColor=white)](./github.md)
+[![Badge: GitLab](https://img.shields.io/badge/GitLab-FC6D26.svg?logo=gitlab&logoColor=white)](./gitlab.md)
+[![Badge: Bitbucket](https://img.shields.io/badge/Bitbucket-0052CC.svg?logo=bitbucket&logoColor=white)](./bitbucket.md)
 
 Service account keys are a security risk if compromised.
 Avoid service account keys and instead use the [Workload Identity Federation](https://cloud.google.com/iam/docs/workload-identity-federation).
@@ -29,18 +30,27 @@ graph TD;
 
 ---
 
+
 ## How-tos
 
-* :octocat: **[Set up Identity Federation for GitHub Actions](./github.md)**
-* 🦊 **[Set up Identity Federation for GitLab CI](./gitlab.md)**
-* **[Settings in Google Cloud Console](./console.md)**
+Set up Identity Federation for:
 
-> If you have understood the concept, you can also use my Terraform modules:
-> * [Google Cloud Workload Identity for GitHub](https://registry.terraform.io/modules/Cyclenerd/wif-github/google/latest)
-> * [Google Cloud Workload Identity for GitLab](https://registry.terraform.io/modules/Cyclenerd/wif-gitlab/google/latest)
-> * [Allow Login via WIF for Service Accounts](https://registry.terraform.io/modules/Cyclenerd/wif-service-account/google/latest)
->
-> This makes the setup much faster and automated.
+* :octocat: **[GitHub Actions](./github.md)**
+* 🦊 **[GitLab CI](./gitlab.md)**
+* 🪣 **[Bitbucket pipelines](./bitbucket.md)**
+
+You can check the settings in [Google Cloud Console](./console.md).
+
+If you have understood the concept, you can also use my Terraform modules:
+
+* Create Google Cloud Workload Identity for...
+  * [GitHub](https://registry.terraform.io/modules/Cyclenerd/wif-github/google/latest)
+  * [GitLab](https://registry.terraform.io/modules/Cyclenerd/wif-gitlab/google/latest)
+  * [Bitbucket](https://registry.terraform.io/modules/Cyclenerd/wif-bitbucket/google/latest)
+* [Allow Login via WIF for Service Accounts](https://registry.terraform.io/modules/Cyclenerd/wif-service-account/google/latest)
+
+This Terraform IaC makes the setup much faster, easier, and less error prone.
+
 
 ## Disable Service Account Keys
 
