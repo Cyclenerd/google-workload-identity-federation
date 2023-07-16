@@ -1,13 +1,19 @@
 # Set up Identity Federation for GitHub Actions
 
+[![Badge: GitHub](https://img.shields.io/badge/GitHub-181717.svg?logo=github&logoColor=white)](#)
+
+## Create Workload Identity Pool
+
 Run in the following [Google Cloud CLI](https://cloud.google.com/sdk/docs/install) commands...
 
 Set project (replace `YOUR-GOOGLE-CLOUD-PROJECT-ID` with your project ID):
+
 ```bash
 gcloud config set project YOUR-GOOGLE-CLOUD-PROJECT-ID
 ```
 
 Enable APIs:
+
 ```bash
 gcloud services enable iam.googleapis.com
 gcloud services enable sts.googleapis.com
@@ -15,6 +21,7 @@ gcloud services enable iamcredentials.googleapis.com
 ```
 
 Create a Workload Identity Pool:
+
 ```bash
 gcloud iam workload-identity-pools create "github-com" \
 --location="global" \
@@ -22,6 +29,7 @@ gcloud iam workload-identity-pools create "github-com" \
 ```
 
 Create a Workload Identity Provider in that pool:
+
 ```bash
 gcloud iam workload-identity-pools providers create-oidc "github-com-oidc" \
 --location="global" \
@@ -40,6 +48,7 @@ Attribute mapping:
 | `attribute.repository`            | `assertion.repository`            | The repository from where the workflow is running
 
 Get the full ID of the Workload Identity Pool:
+
 ```bash
 gcloud iam workload-identity-pools describe "github-com" \
 --location="global" \
@@ -47,21 +56,25 @@ gcloud iam workload-identity-pools describe "github-com" \
 ```
 
 Save this value as an environment variable:
+
 ```bash
 export WORKLOAD_IDENTITY_POOL="..." # value from above
 ```
 
 Save your GitHub repository as an environment variable:
+
 ```bash
 export REPOSITORY="username/name" # i.e. "Cyclenerd/google-workload-identity-federation"
 ```
 
 Save the service account ID (email) as an environment variable:
+
 ```bash
 export SERVICE_ACCOUNT_EMAIL="MY-SERVICE-ACCOUNT-NAME@MY-PROJECT_ID.iam.gserviceaccount.com."
 ```
 
 Allow authentications from the Workload Identity Provider originating from your repository to impersonate the Service Account:
+
 ```bash
 gcloud iam service-accounts add-iam-policy-binding "$SERVICE_ACCOUNT_EMAIL" \
 --role="roles/iam.workloadIdentityUser" \
@@ -77,7 +90,10 @@ gcloud iam service-accounts add-iam-policy-binding "$SERVICE_ACCOUNT_EMAIL" \
 > Instead of the Repsoitory name you can use the Subject (`sub`).
 > Example for GitHub: `repo:octo-org/octo-repo:environment:prod`
 
+## GitHub Actions
+
 Extract the Workload Identity Provider resource name:
+
 ```bash
 gcloud iam workload-identity-pools providers describe "github-com-oidc" \
 --location="global" \
@@ -87,8 +103,6 @@ gcloud iam workload-identity-pools providers describe "github-com-oidc" \
 
 Copy this name for your GitHub Actions configuration and add it to `workload_identity_provider`.
 
-**GitHub Actions:**
-
 An example of a working GitHub Actions configuration can be found [here](https://github.com/Cyclenerd/google-workload-identity-federation/blob/master/.github/workflows/auth.yml) ([`.github/workflows/auth.yml`](https://github.com/Cyclenerd/google-workload-identity-federation/blob/master/.github/workflows/auth.yml)).
 
 **More Help:**
@@ -97,6 +111,7 @@ An example of a working GitHub Actions configuration can be found [here](https:/
 * [Troubleshooting](https://github.com/google-github-actions/auth/blob/main/docs/TROUBLESHOOTING.md)
 * [Google Blog](https://cloud.google.com/blog/products/identity-security/enabling-keyless-authentication-from-github-actions)
 * [Google Documentation](https://cloud.google.com/iam/docs/configuring-workload-identity-federation#github-actions)
+
 
 ## GitHub OIDC token
 
@@ -129,4 +144,5 @@ An example of a working GitHub Actions configuration can be found [here](https:/
   "iat": 1632493567
 }
 ```
+
 Source: [GitHub OIDC token documentation](https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/about-security-hardening-with-openid-connect#understanding-the-oidc-token)

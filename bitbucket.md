@@ -1,5 +1,7 @@
 # Set up Identity Federation for Bitbucket
 
+[![Badge: Bitbucket](https://img.shields.io/badge/Bitbucket-0052CC.svg?logo=bitbucket&logoColor=white)](#)
+
 ## Bitbucket Repository Settings
 
 Navigate to the Bitbucket repsoitory settings and click the menu item "OpenID Connect".

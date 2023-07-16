@@ -1,13 +1,19 @@
 # Set up Identity Federation for GitLab CI
 
+[![Badge: GitLab](https://img.shields.io/badge/GitLab-FC6D26.svg?logo=gitlab&logoColor=white)](#)
+
+## Create Workload Identity Pool
+
 Run in the following [Google Cloud CLI](https://cloud.google.com/sdk/docs/install) commands...
 
 Set project (replace `YOUR-GOOGLE-CLOUD-PROJECT-ID` with your project ID):
+
 ```bash
 gcloud config set project YOUR-GOOGLE-CLOUD-PROJECT
 ```
 
 Enable APIs:
+
 ```bash
 gcloud services enable iam.googleapis.com
 gcloud services enable sts.googleapis.com
@@ -15,6 +21,7 @@ gcloud services enable iamcredentials.googleapis.com
 ```
 
 Create a Workload Identity Pool:
+
 ```bash
 gcloud iam workload-identity-pools create "gitlab-com" \
 --location="global" \
@@ -22,6 +29,7 @@ gcloud iam workload-identity-pools create "gitlab-com" \
 ```
 
 Create a Workload Identity Provider in that pool:
+
 ```bash
 gcloud iam workload-identity-pools providers create-oidc "gitlab-com-oidc" \
 --location="global" \
@@ -44,6 +52,7 @@ Attribute mapping:
 | `attribute.repository`            | `assertion.project_path`          | The repository (project path) from where the workflow is running (not `assertion.repository`)
 
 Get the full ID of the Workload Identity Pool:
+
 ```bash
 gcloud iam workload-identity-pools describe "gitlab-com" \
 --location="global" \
@@ -51,16 +60,19 @@ gcloud iam workload-identity-pools describe "gitlab-com" \
 ```
 
 Save this value as an environment variable:
+
 ```bash
 export WORKLOAD_IDENTITY_POOL="..." # value from above
 ```
 
-Save your GitLab repository as an environment variable
+Save your GitLab repository as an environment variable:
+
 ```bash
 export REPOSITORY="username/name" # i.e. "Cyclenerd/google-workload-identity-federation-for-gitlab"
 ```
 
 Save the service account ID (email) as an environment variable:
+
 ```bash
 export SERVICE_ACCOUNT_EMAIL="MY-SERVICE-ACCOUNT-NAME@MY-PROJECT_ID.iam.gserviceaccount.com."
 ```
@@ -81,6 +93,9 @@ gcloud iam service-accounts add-iam-policy-binding "$SERVICE_ACCOUNT_EMAIL" \
 > Instead of the Repsoitory name you can use the Subject (`sub`).
 > Example for GitLab: `project_path:mygroup/myproject:ref_type:branch:ref:main`
 
+
+## GitLab CI
+
 Extract the Workload Identity Provider resource name:
 ```bash
 gcloud iam workload-identity-pools providers describe "gitlab-com-oidc" \
@@ -91,14 +106,13 @@ gcloud iam workload-identity-pools providers describe "gitlab-com-oidc" \
 
 Copy this name for your GitLab CI configuration (`gitlab-ci.yml`).
 
-**GitLab CI:**
-
 An example of a working GitLab CI configuration can be found [here](.gitlab-ci.yml) ([`.gitlab-ci.yml`](.gitlab-ci.yml)) or on [GitLab](https://gitlab.com/Cyclenerd/google-workload-identity-federation-for-gitlab/-/blob/master/.gitlab-ci.yml).
 
 **More Help:**
 
 * [GitLab Documentation](https://docs.gitlab.com/ee/ci/cloud_services/google_cloud/)
 * [GitLab OpenID Connect in GCP repo](https://gitlab.com/guided-explorations/gcp/configure-openid-connect-in-gcp)
+
 
 ## GitLab OIDC Token
 
@@ -128,4 +142,5 @@ An example of a working GitLab CI configuration can be found [here](.gitlab-ci.y
   "environment_protected": "true"
 }
 ```
+
 Source: [GitLab OIDC token documentation](https://docs.gitlab.com/ee/ci/cloud_services/index.html#how-it-works)
