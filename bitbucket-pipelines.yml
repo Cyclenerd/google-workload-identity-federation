@@ -1,4 +1,4 @@
-image: cyclenerd/google-cloud-gcp-tools-container:latest
+image: cyclenerd/cloud-tools-container:latest
 
 pipelines:
   default:

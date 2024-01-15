@@ -1,5 +1,5 @@
 default:
-  image: cyclenerd/google-cloud-gcp-tools-container:latest
+  image: cyclenerd/cloud-tools-container:latest
 
 variables:
   WIF_PROVIDER: projects/753695557698/locations/global/workloadIdentityPools/gitlab-com/providers/gitlab-com-oidc
