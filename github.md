@@ -12,7 +12,7 @@ Set project (replace `YOUR-GOOGLE-CLOUD-PROJECT-ID` with your project ID):
 gcloud config set project YOUR-GOOGLE-CLOUD-PROJECT-ID
 ```
 
-Enable APIs:
+**Enable APIs:**
 
 ```bash
 gcloud services enable iam.googleapis.com
@@ -20,7 +20,7 @@ gcloud services enable sts.googleapis.com
 gcloud services enable iamcredentials.googleapis.com
 ```
 
-Create a Workload Identity Pool:
+**Create a Workload Identity Pool:**
 
 ```bash
 gcloud iam workload-identity-pools create "github-com" \
@@ -28,15 +28,27 @@ gcloud iam workload-identity-pools create "github-com" \
 --display-name="github.com"
 ```
 
-Create a Workload Identity Provider in that pool:
+**Restrict access to GitHub organization:**
+
+> **Warning**
+> GitHub use a single issuer URL across all organizations and some of the claims embedded in OIDC tokens might not be unique to your organization.
+> To help protect against spoofing threats, you must use an attribute condition that restricts access to tokens issued by your GitHub organization.
+
+```bash
+# Set username or the name of a GitHub organization
+export GITHUB_ORGANIZATION="username" # i.e. "Cyclenerd" for https://github.com/Cyclenerd or "SAP" for https://github.com/SAP
+```
+
+**Create a Workload Identity Provider in that pool:**
 
 ```bash
 gcloud iam workload-identity-pools providers create-oidc "github-com-oidc" \
 --location="global" \
 --workload-identity-pool="github-com" \
 --display-name="github.com OIDC" \
---attribute-mapping="google.subject=assertion.sub,attribute.sub=assertion.sub,attribute.repository=assertion.repository" \
---issuer-uri="https://token.actions.githubusercontent.com"
+--issuer-uri="https://token.actions.githubusercontent.com" \
+--attribute-mapping="google.subject=assertion.sub,attribute.sub=assertion.sub,attribute.repository=assertion.repository,attribute.repository_owner=assertion.repository_owner" \
+--attribute-condition="assertion.repository_owner == '${GITHUB_ORGANIZATION}'"
 ```
 
 Attribute mapping:
@@ -45,7 +57,8 @@ Attribute mapping:
 |-----------------------------------|-----------------------------------|-------------|
 | `google.subject`                  | `assertion.sub`                   | Subject
 | `attribute.sub`                   | `assertion.sub`                   | Defines the subject claim that is to be validated by the cloud provider. This setting is essential for making sure that access tokens are only allocated in a predictable way.
-| `attribute.repository`            | `assertion.repository`            | The repository from where the workflow is running
+| `attribute.repository`            | `assertion.repository`            | The repository from where the workflow is running. Contains the owner and repository name. Example `Cyclenerd/google-workload-identity-federation`.
+| `attribute.repository_owner`      | `assertion.repository_owner`      | Contains the owner, which can be a username or the name of a GitHub organization. Example `Cyclenerd`.
 
 Get the full ID of the Workload Identity Pool:
 
