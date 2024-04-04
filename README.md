@@ -33,6 +33,11 @@ graph TD;
 
 ## How-tos
 
+> **Warning**
+> Update 2024/04/04: GitHub and GitLab SaaS use a single issuer URL across all organizations and some of the claims embedded in OIDC tokens might not be unique to your organization.
+> To help protect against spoofing threats, you must use an attribute condition that restricts access to tokens issued by your GitHub organization or GitLab group.
+> This How-To has been updated to take this into account.
+
 Set up Identity Federation for:
 
 * :octocat: **[GitHub Actions](./github.md)**
