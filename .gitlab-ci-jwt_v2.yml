@@ -1,3 +1,8 @@
+#
+# CI_JOB_JWT and CI_JOB_JWT_V2 were deprecated in GitLab 15.9 and are scheduled to be removed in GitLab 17.0.
+# Use ID tokens instead.
+#
+
 default:
   image: cyclenerd/cloud-tools-container:latest
 
@@ -11,17 +16,13 @@ stages:
 
 auth:
   stage: auth
-  id_tokens:
-    GITLAB_OIDC_TOKEN:
-      aud: https://gitlab.com
-  before_script:
-    - echo "$GITLAB_OIDC_TOKEN" > token.txt
   script:
     # Configure Workload Identity Federation via a credentials file.
+    - echo ${CI_JOB_JWT_V2} > .ci_job_jwt_file
     - gcloud iam workload-identity-pools create-cred-config "${WIF_PROVIDER}"
       --service-account="${SERVICE_ACCOUNT}"
       --output-file="${GOOGLE_CREDENTIALS}"
-      --credential-source-file="token.txt"
+      --credential-source-file=.ci_job_jwt_file
     - gcloud config set auth/credential_file_override "${GOOGLE_CREDENTIALS}"
      # Now you can run gcloud commands authenticated as the impersonated service account.
     - gcloud config list
