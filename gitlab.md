@@ -12,7 +12,7 @@ Set project (replace `YOUR-GOOGLE-CLOUD-PROJECT-ID` with your project ID):
 gcloud config set project YOUR-GOOGLE-CLOUD-PROJECT
 ```
 
-Enable APIs:
+**Enable APIs:**
 
 ```bash
 gcloud services enable iam.googleapis.com
@@ -20,7 +20,7 @@ gcloud services enable sts.googleapis.com
 gcloud services enable iamcredentials.googleapis.com
 ```
 
-Create a Workload Identity Pool:
+**Create a Workload Identity Pool:**
 
 ```bash
 gcloud iam workload-identity-pools create "gitlab-com" \
@@ -28,16 +28,28 @@ gcloud iam workload-identity-pools create "gitlab-com" \
 --display-name="gitlab.com"
 ```
 
-Create a Workload Identity Provider in that pool:
+**Restrict access to GitLab group:**
+
+> **Warning**
+> GitLab SaaS use a single issuer URL across all organizations and some of the claims embedded in OIDC tokens might not be unique to your organization.
+> To help protect against spoofing threats, you must use an attribute condition that restricts access to tokens issued by your GitLab group.
+
+```bash
+# Set username or the name of a GitLab group
+export GITLAB_GROUP="username" # i.e. "Cyclenerd" for https://gitlab.com/Cyclenerd
+```
+
+**Create a Workload Identity Provider in that pool:**
 
 ```bash
 gcloud iam workload-identity-pools providers create-oidc "gitlab-com-oidc" \
 --location="global" \
 --workload-identity-pool="gitlab-com" \
 --display-name="gitlab.com OIDC" \
---attribute-mapping="google.subject=assertion.sub,attribute.sub=assertion.sub,attribute.repository=assertion.project_path" \
 --issuer-uri="https://gitlab.com" \
---allowed-audiences="https://gitlab.com"
+--allowed-audiences="https://gitlab.com" \
+--attribute-mapping="google.subject=assertion.sub,attribute.sub=assertion.sub,attribute.repository=assertion.project_path,attribute.namespace_path=assertion.namespace_path" \
+--attribute-condition="assertion.namespace_path == '${GITLAB_GROUP}'"
 ```
 
 > **Note**
@@ -50,6 +62,7 @@ Attribute mapping:
 | `google.subject`                  | `assertion.sub`                   | Subject
 | `attribute.sub`                   | `assertion.sub`                   | Defines the subject claim (`project_path:{group}/{project}:ref_type:{type}:ref:{branch_name}`) that is to be validated by the cloud provider. This setting is essential for making sure that access tokens are only allocated in a predictable way.
 | `attribute.repository`            | `assertion.project_path`          | The repository (project path) from where the workflow is running (not `assertion.repository`)
+| `attribute.namespace_path`        | `assertion.namespace_path`        | The group or user namespace from where the workflow is running
 
 Get the full ID of the Workload Identity Pool:
 
@@ -143,4 +156,4 @@ An example of a working GitLab CI configuration can be found [here](.gitlab-ci.y
 }
 ```
 
-Source: [GitLab OIDC token documentation](https://docs.gitlab.com/ee/ci/cloud_services/index.html#how-it-works)
+Source: [GitLab OIDC token payload](https://docs.gitlab.com/ee/ci/secrets/id_token_authentication.html#token-payload)
